@@ -1,4 +1,3 @@
-%%writefile hubert.py
 """
 Custom tokenizer model.
 Author: https://www.github.com/gitmylo/
