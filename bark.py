@@ -1,4 +1,3 @@
-%%writefile bark.py
 """
 Much of this code is adapted from Andrej Karpathy's NanoGPT
 (https://github.com/karpathy/nanoGPT)
