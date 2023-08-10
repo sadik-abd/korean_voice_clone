@@ -12,6 +12,7 @@ import numpy
 import torch
 from torch import nn, optim
 from torch.serialization import MAP_LOCATION
+from transformers import HubertModel
 
 import os.path
 import shutil
@@ -70,12 +71,8 @@ class CustomHubert(nn.Module):
 
         checkpoint = torch.load(checkpoint_path, map_location=device)
         load_model_input = {checkpoint_path: checkpoint}
-        model, *_ = fairseq.checkpoint_utils.load_model_ensemble_and_task(load_model_input)
-
-        if device is not None:
-            model[0].to(device)
-
-        self.model = model[0]
+        model = HubertModel.from_pretrained("team-lucid/hubert-base-korean").to(device)
+        self.model = model
         self.model.eval()
 
     @property
