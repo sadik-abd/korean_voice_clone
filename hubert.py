@@ -71,8 +71,12 @@ class CustomHubert(nn.Module):
 
         checkpoint = torch.load(checkpoint_path, map_location=device)
         load_model_input = {checkpoint_path: checkpoint}
-        model = HubertModel.from_pretrained("team-lucid/hubert-base-korean").to(device)
-        self.model = model
+        model, *_ = fairseq.checkpoint_utils.load_model_ensemble_and_task(load_model_input)
+
+        if device is not None:
+            model[0].to(device)
+
+        self.model = model[0]
         self.model.eval()
 
     @property
