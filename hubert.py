@@ -1,3 +1,8 @@
+"""
+Custom tokenizer model.
+Author: https://www.github.com/gitmylo/
+License: MIT
+"""
 
 import json
 import os.path
@@ -46,6 +51,7 @@ class CustomHubert(nn.Module):
 
     def __init__(
         self,
+        checkpoint_path,
         target_sample_hz=16000,
         seq_len_multiple_of=None,
         output_layer=9,
@@ -59,6 +65,12 @@ class CustomHubert(nn.Module):
         if device is not None:
             self.to(device)
 
+        model_path = Path(checkpoint_path)
+
+        assert model_path.exists(), f'path {checkpoint_path} does not exist'
+
+        checkpoint = torch.load(checkpoint_path, map_location=device)
+        load_model_input = {checkpoint_path: checkpoint}
         model = HubertModel.from_pretrained("team-lucid/hubert-base-korean").to(device)
         self.model = model
         self.model.eval()
@@ -83,13 +95,13 @@ class CustomHubert(nn.Module):
             wav_input = curtail_to_multiple(wav_input, self.seq_len_multiple_of)
 
         embed = self.model(
-            wav_input
-            # features_only=True,
-            # mask=False,  # thanks to @maitycyrus for noticing that mask is defaulted to True in the fairseq code
-            # output_layer=self.output_layer
+            wav_input,
+            features_only=True,
+            mask=False,  # thanks to @maitycyrus for noticing that mask is defaulted to True in the fairseq code
+            output_layer=self.output_layer
         )
 
-        embed, packed_shape = pack([embed.last_hidden_state], '* d')
+        embed, packed_shape = pack([embed['x']], '* d')
 
         # codebook_indices = self.kmeans.predict(embed.cpu().detach().numpy())
 
