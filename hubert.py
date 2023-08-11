@@ -118,7 +118,7 @@ class CustomHubert(nn.Module):
         return codebook_indices
 class HuBERTManager:
     @staticmethod
-    def make_sure_hubert_installed(download_url: str = 'https://dl.fbaipublicfiles.com/hubert/hubert_base_ls960.pt', file_name: str = 'hubert.pt'):
+    def make_sure_hubert_installed(download_url: str = 'https://huggingface.co/spaces/GitMylo/bark-voice-cloning/resolve/main/data/models/hubert/hubert.pt', file_name: str = 'hubert.pt'):
         install_dir = os.path.join('data', 'models', 'hubert')
         if not os.path.isdir(install_dir):
             os.makedirs(install_dir, exist_ok=True)
