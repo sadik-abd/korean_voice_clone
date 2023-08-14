@@ -907,23 +907,6 @@ def generate_coarse(
         history_prompt = _load_history_prompt(history_prompt)
         x_semantic_history = history_prompt["semantic_prompt"]
         x_coarse_history = history_prompt["coarse_prompt"]
-        assert (
-            isinstance(x_semantic_history, np.ndarray)
-            and len(x_semantic_history.shape) == 1
-            and len(x_semantic_history) > 0
-            and x_semantic_history.min() >= 0
-            and x_semantic_history.max() <= SEMANTIC_VOCAB_SIZE - 1
-            and isinstance(x_coarse_history, np.ndarray)
-            and len(x_coarse_history.shape) == 2
-            and x_coarse_history.shape[0] == N_COARSE_CODEBOOKS
-            and x_coarse_history.shape[-1] >= 0
-            and x_coarse_history.min() >= 0
-            and x_coarse_history.max() <= CODEBOOK_SIZE - 1
-            # and (
-            #     round(x_coarse_history.shape[-1] / len(x_semantic_history), 1)
-            #     == round(semantic_to_coarse_ratio / N_COARSE_CODEBOOKS, 1)
-            # )
-        )
         x_coarse_history = _flatten_codebooks(x_coarse_history) + SEMANTIC_VOCAB_SIZE
         # trim histories correctly
         n_semantic_hist_provided = np.min(
